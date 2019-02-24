@@ -10,21 +10,19 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-    let defaults = UserDefaults.standard
+    let fileDataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     var itemArray = [Item]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-//            itemArray = items
-//        }
-        
+
         navigationController?.navigationBar.prefersLargeTitles = true
+        self.loadData()
     }
 
     //MARK - DataSource methods
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
@@ -45,8 +43,8 @@ class TodoListViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        tableView.reloadData()
+        self.saveData()
+
     }
     
     //MARK - Add new items
@@ -61,7 +59,7 @@ class TodoListViewController: UITableViewController {
             self.itemArray.append(newItem)
             
             self.tableView.reloadData()
-            //self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            self.saveData()
         }
         
         alert.addTextField { (alertTextField) in
@@ -71,6 +69,31 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: Encode and Decode data
+    func saveData() {
+        let encoder = PropertyListEncoder();
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: fileDataPath! )
+        } catch {
+            print("Error occured with encoding or writing data: \(error)")
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    func loadData() {
+        if let data = try? Data(contentsOf: fileDataPath!) {
+            let decoder = PropertyListDecoder()
+            do {
+               itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error occured with decoding or reading data: \(error)")
+            }
+        }
     }
 }
 
