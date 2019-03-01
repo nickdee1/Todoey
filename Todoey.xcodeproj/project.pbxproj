@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010BDA35222680D700F17150 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010BDA34222680D700F17150 /* CategoryViewController.swift */; };
 		013D82812210783700995936 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013D82802210783700995936 /* AppDelegate.swift */; };
 		013D82832210783700995936 /* TodoListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013D82822210783700995936 /* TodoListTableViewController.swift */; };
 		013D82862210783700995936 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 013D82842210783700995936 /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		010BDA34222680D700F17150 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		013D827D2210783700995936 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		013D82802210783700995936 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		013D82822210783700995936 /* TodoListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewController.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		0144F38022173CDB00A0AA2E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				010BDA34222680D700F17150 /* CategoryViewController.swift */,
 				013D82822210783700995936 /* TodoListTableViewController.swift */,
 				01A2A3D82222FE960082E1BF /* UsefulFuncs.swift */,
 			);
@@ -173,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				010BDA35222680D700F17150 /* CategoryViewController.swift in Sources */,
 				01A2A3DC22231F330082E1BF /* DataModel.xcdatamodeld in Sources */,
 				013D82832210783700995936 /* TodoListTableViewController.swift in Sources */,
 				013D82812210783700995936 /* AppDelegate.swift in Sources */,
