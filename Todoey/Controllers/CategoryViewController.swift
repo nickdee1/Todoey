@@ -7,13 +7,13 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let realm = try! Realm()
     
-    var categoryArray = [Category]()
+    var categoryArray: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +27,10 @@ class CategoryViewController: UITableViewController {
         let alert = UIAlertController(title: "New Item", message: nil, preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            let newCategory = Category(context: self.context)
+            let newCategory = Category()
             newCategory.name = textField.text!
             
-            self.categoryArray.append(newCategory)
-            self.saveData()
+            self.save(category: newCategory)
         }
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -48,12 +47,12 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView Datasource methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categoryArray?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoryArray[indexPath.row].name
+        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No categories added yet"
         return cell
     }
     
@@ -67,15 +66,63 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categoryArray?[indexPath.row]
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, index) in
+            if let category = self.categoryArray?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        self.realm.delete(category.items)
+                        self.realm.delete(category)
+                    }
+                } catch {
+                    print("Error deleting category: \(error)")
+                }
+                self.tableView.reloadData()
+            }
+        }
+        
+        let edit = UITableViewRowAction(style: .default, title: "Edit") { (action, index) in
+            var textField = UITextField()
+            let alert = UIAlertController(title: "Rename", message: nil, preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            let submitAction = UIAlertAction(title: "Submit", style: .default, handler: { (action) in
+                if let category = self.categoryArray?[indexPath.row] {
+                    do {
+                        try self.realm.write {
+                            category.name = textField.text!
+                        }
+                    } catch {
+                        print("Error editing name: \(error)")
+                    }
+                }
+                self.tableView.reloadData()
+            })
+            
+            alert.addTextField(configurationHandler: { (textFieldAction) in
+                textField = textFieldAction
+            })
+            alert.addAction(cancelAction)
+            alert.addAction(submitAction)
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        edit.backgroundColor = UIColor(ciColor: .blue)
+        
+        return [delete, edit]
     }
     
     // MARK: - Data Manipulation methods
     
-    func saveData() {
+    func save(category: Category) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Error occured with saving data: \(error)")
         }
@@ -83,12 +130,8 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadData() {
-        let request: NSFetchRequest<Category> = Category.fetchRequest()
-        do {
-            categoryArray = try context.fetch(request)
-        } catch {
-            print("Error with loading data: \(error)")
-        }
+        categoryArray = realm.objects(Category.self)
+
         tableView.reloadData()
     }
 }
