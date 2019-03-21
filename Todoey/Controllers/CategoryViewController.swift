@@ -8,19 +8,24 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
-    var categoryArray: Results<Category>?
+    var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
         
-        navigationController?.navigationBar.prefersLargeTitles = true
+        tableView.separatorColor = UIColor.clear
+        loadData()
     }
+    
+    
+    
+    // MARK: - Add new Category
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
@@ -29,6 +34,8 @@ class CategoryViewController: UITableViewController {
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.colorHex = UIColor.randomFlat.hexValue()
+            
             
             self.save(category: newCategory)
         }
@@ -40,21 +47,33 @@ class CategoryViewController: UITableViewController {
         
         alert.addAction(action)
         alert.addAction(cancel)
-        
         present(alert, animated: true, completion: nil)
     }
+    
+    
     
     // MARK: - TableView Datasource methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray?.count ?? 1
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No categories added yet"
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
+        
+        if let colorHexValue = categories?[indexPath.row].colorHex {
+            let color = UIColor(hexString: colorHexValue)
+            cell.backgroundColor = color
+            cell.textLabel?.textColor = ContrastColorOf(color!, returnFlat: true)
+        }
+        
         return cell
     }
+    
+    
     
     // MARK: - TableView Delegate methods
     
@@ -66,55 +85,12 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray?[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
+            destinationVC.navigationItem.title = categories?[indexPath.row].name
         }
+        
     }
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, index) in
-            if let category = self.categoryArray?[indexPath.row] {
-                do {
-                    try self.realm.write {
-                        self.realm.delete(category.items)
-                        self.realm.delete(category)
-                    }
-                } catch {
-                    print("Error deleting category: \(error)")
-                }
-                self.tableView.reloadData()
-            }
-        }
-        
-        let edit = UITableViewRowAction(style: .default, title: "Edit") { (action, index) in
-            var textField = UITextField()
-            let alert = UIAlertController(title: "Rename", message: nil, preferredStyle: .alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            
-            let submitAction = UIAlertAction(title: "Submit", style: .default, handler: { (action) in
-                if let category = self.categoryArray?[indexPath.row] {
-                    do {
-                        try self.realm.write {
-                            category.name = textField.text!
-                        }
-                    } catch {
-                        print("Error editing name: \(error)")
-                    }
-                }
-                self.tableView.reloadData()
-            })
-            
-            alert.addTextField(configurationHandler: { (textFieldAction) in
-                textField = textFieldAction
-            })
-            alert.addAction(cancelAction)
-            alert.addAction(submitAction)
-            self.present(alert, animated: true, completion: nil)
-        }
-        
-        edit.backgroundColor = UIColor(ciColor: .blue)
-        
-        return [delete, edit]
-    }
     
     // MARK: - Data Manipulation methods
     
@@ -130,8 +106,25 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadData() {
-        categoryArray = realm.objects(Category.self)
+        categories = realm.objects(Category.self).sorted(byKeyPath: "name", ascending: false)
 
         tableView.reloadData()
+    }
+    
+    override func deleteModel(at indexPath: IndexPath) {
+        if let category = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(category.items)
+                    realm.delete(category)
+                }
+            } catch {
+                print("Error deleting items: \(error)")
+            }
+        }
+    }
+    
+    override func editModel(at indexPath: IndexPath) {
+        // TODO: - Add Edit Swipe Cell Functionality
     }
 }

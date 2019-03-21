@@ -15,6 +15,7 @@
 		013D828B2210783800995936 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 013D82892210783800995936 /* LaunchScreen.storyboard */; };
 		0182BDE22229C3B30083B955 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0182BDE12229C3B30083B955 /* Item.swift */; };
 		0182BDE42229C3BC0083B955 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0182BDE32229C3BC0083B955 /* Category.swift */; };
+		0197CAC1223C55AD004A2C0B /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0197CAC0223C55AD004A2C0B /* SwipeTableViewController.swift */; };
 		01A2A3D92222FE960082E1BF /* UsefulFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A2A3D82222FE960082E1BF /* UsefulFuncs.swift */; };
 		6DD97D5157884295D1D2EE36 /* Pods_Todoey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E34CF7101A6EEC19AD374A57 /* Pods_Todoey.framework */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		013D828C2210783800995936 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0182BDE12229C3B30083B955 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		0182BDE32229C3BC0083B955 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		0197CAC0223C55AD004A2C0B /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		01A2A3D82222FE960082E1BF /* UsefulFuncs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UsefulFuncs.swift; path = "../../../../../Swift useful funcs/UsefulFuncs.swift"; sourceTree = "<group>"; };
 		4A5B74132AFDB2520FB5870A /* Pods-Todoey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.release.xcconfig"; sourceTree = "<group>"; };
 		7B1AC577F101BBC4008E84BA /* Pods-Todoey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.debug.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			children = (
 				010BDA34222680D700F17150 /* CategoryViewController.swift */,
 				013D82822210783700995936 /* TodoListTableViewController.swift */,
+				0197CAC0223C55AD004A2C0B /* SwipeTableViewController.swift */,
 				01A2A3D82222FE960082E1BF /* UsefulFuncs.swift */,
 			);
 			path = Controllers;
@@ -210,15 +213,19 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Todoey/Pods-Todoey-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -257,6 +264,7 @@
 				010BDA35222680D700F17150 /* CategoryViewController.swift in Sources */,
 				013D82832210783700995936 /* TodoListTableViewController.swift in Sources */,
 				013D82812210783700995936 /* AppDelegate.swift in Sources */,
+				0197CAC1223C55AD004A2C0B /* SwipeTableViewController.swift in Sources */,
 				0182BDE22229C3B30083B955 /* Item.swift in Sources */,
 				01A2A3D92222FE960082E1BF /* UsefulFuncs.swift in Sources */,
 				0182BDE42229C3BC0083B955 /* Category.swift in Sources */,
