@@ -124,7 +124,16 @@ class CategoryViewController: SwipeTableViewController {
         }
     }
     
-    override func editModel(at indexPath: IndexPath) {
-        // TODO: - Add Edit Swipe Cell Functionality
+    override func editModel(at indexPath: IndexPath, with name: String) {
+        if let category = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    category.name = name
+                    tableView.reloadData()
+                }
+            } catch {
+                print("Error deleting items: \(error)")
+            }
+        }
     }
 }

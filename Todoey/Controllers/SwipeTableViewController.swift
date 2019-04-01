@@ -30,7 +30,29 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         
         let editAction = SwipeAction(style: .default, title: "Edit") { (action, index) in
             
-            self.editModel(at: indexPath)
+            var textLabel = UITextField()
+            
+            let alert = UIAlertController(title: "Edit", message: nil, preferredStyle: .alert)
+            
+            alert.addTextField(configurationHandler: { (alertTextField) in
+                textLabel = alertTextField
+            })
+            let alertCancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            let alertEditAction = UIAlertAction(title: "Edit", style: .default, handler: { (editAction) in
+                
+                if let text = textLabel.text {
+                    self.editModel(at: indexPath, with: text)
+                }
+                
+            })
+            
+            
+            alert.addAction(alertEditAction)
+            alert.addAction(alertCancelAction)
+            
+            self.present(alert, animated: true, completion: nil)
+            
             
         }
     
@@ -57,7 +79,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     func deleteModel(at indexPath: IndexPath) {
         print("delete")
     }
-    func editModel(at indexPath: IndexPath) {
+    func editModel(at indexPath: IndexPath, with name: String) {
         print("edit")
     }
 }

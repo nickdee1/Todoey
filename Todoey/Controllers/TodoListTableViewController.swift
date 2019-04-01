@@ -28,9 +28,13 @@ class TodoListViewController: SwipeTableViewController {
         super.viewDidLoad()
         
         let searchController = UISearchController(searchResultsController: nil)
+        
         searchController.searchResultsUpdater = self
+        
         searchController.searchBar.placeholder = "Search"
+        
         searchController.obscuresBackgroundDuringPresentation = false
+        
         searchController.searchBar.tintColor = UIColor.white
         
 
@@ -43,6 +47,7 @@ class TodoListViewController: SwipeTableViewController {
 
 
     override func viewDidAppear(_ animated: Bool) {
+        
         if let barColor = selectedCategory?.colorHex {
             changeNavigationBarAppearance(color: UIColor(hexString: barColor)!)
             barButton.tintColor = ContrastColorOf(UIColor(hexString: barColor)!, returnFlat: true)
@@ -50,6 +55,7 @@ class TodoListViewController: SwipeTableViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        
         changeNavigationBarAppearance(color: UIColor(cgColor: #colorLiteral(red: 0.328608326, green: 0.7321027848, blue: 1, alpha: 1)), dismissed: true)
     }
     
@@ -83,6 +89,7 @@ class TodoListViewController: SwipeTableViewController {
     
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if let item = todoItems?[indexPath.row] {
             do {
                 try self.realm.write {
@@ -104,8 +111,11 @@ class TodoListViewController: SwipeTableViewController {
         var textField = UITextField()
         
         let alert = UIAlertController(title: "Add task", message: "", preferredStyle: .alert)
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
         let addAction = UIAlertAction(title: "Add", style: .default) { (action) in
+            
             
             if let currentCategory = self.selectedCategory {
                 do {
@@ -154,6 +164,20 @@ class TodoListViewController: SwipeTableViewController {
             }
         }
     }
+    
+    override func editModel(at indexPath: IndexPath, with name: String) {
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.title = name
+                    tableView.reloadData()
+                }
+            } catch {
+                print("Error deleting items: \(error)")
+            }
+        }
+    }
+
     
     // MARK: - Navigation Bar Appearance
     
